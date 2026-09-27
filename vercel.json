@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/third_eye/api/asgi.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "web/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "src/third_eye/api/asgi.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "web/dist/$1"
+    }
+  ]
+}
