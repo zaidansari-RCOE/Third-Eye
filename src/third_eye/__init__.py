@@ -1,1 +1,0 @@
-"""Third Eye Fog-Shield software-only prototype (Phases 1–6)."""
