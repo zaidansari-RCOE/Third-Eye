@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "chmod +x node_modules/.bin/tsc node_modules/.bin/vite && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
