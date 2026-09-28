@@ -12,10 +12,6 @@ services:
     env: static
     buildCommand: cd web && npm install && npm run build
     staticPublishPath: web/dist
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://third-eye-backend-1nwu.onrender.com*
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    envVars:
+      - key: VITE_BACKEND_URL
+        value: https://third-eye-backend-1nwu.onrender.com
