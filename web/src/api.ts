@@ -1,26 +1,6 @@
 import type { ControlRoomSnapshot, MapDocument, WsEnvelope } from "./types";
 
-// Automatically target the backend service if running on Render domain, otherwise use empty string for local dev proxy
-function getBackendUrl(): string {
-  const customEnv = (import.meta.env.VITE_BACKEND_URL ?? "").trim().replace(/\/$/, "");
-  if (customEnv) return customEnv;
-
-  // If hosted on Render static site, automatically map frontend name to backend name
-  if (typeof window !== "undefined" && window.location.hostname.includes("onrender.com")) {
-    const host = window.location.hostname;
-    // Replaces "-frontend" with "-backend" in the hostname automatically
-    const backendHost = host.replace(/-frontend(-[a-z0-9]+)?\.onrender\.com$/, "-backend$1.onrender.com");
-    if (backendHost !== host) {
-      return `https://${backendHost}`;
-    }
-    // Fallback if naming convention differs slightly
-    return `https://third-eye-backend.onrender.com`;
-  }
-
-  return "";
-}
-
-const BACKEND_URL = getBackendUrl();
+const BACKEND_URL = "https://third-eye-backend-1nwu.onrender.com";
 
 function apiUrl(path: string): string {
   return `${BACKEND_URL}${path}`;
@@ -80,27 +60,7 @@ export async function deletePath(path: string): Promise<unknown> {
 }
 
 export function websocketUrl(): string {
-  // Explicitly target the backend service domain via wss:// if hosted on Render
-  if (typeof window !== "undefined" && window.location.hostname.includes("onrender.com")) {
-    const host = window.location.hostname;
-    const backendHost = host.replace(/-frontend(-[a-z0-9]+)?\.onrender\.com$/, "-backend$1.onrender.com");
-    if (backendHost !== host) {
-      return `wss://${backendHost}/api/simulation/ws`;
-    }
-    return `wss://third-eye-backend.onrender.com/api/simulation/ws`;
-  }
-
-  if (BACKEND_URL) {
-    try {
-      const url = new URL(BACKEND_URL);
-      const protocol = url.protocol === "https:" ? "wss:" : "ws:";
-      return `${protocol}//${url.host}/api/simulation/ws`;
-    } catch {
-      // fallback if URL parsing fails
-    }
-  }
-  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return `${protocol}//${window.location.host}/api/simulation/ws`;
+  return "wss://third-eye-backend-1nwu.onrender.com/api/simulation/ws";
 }
 
 export function parseEnvelope(raw: string): WsEnvelope {
