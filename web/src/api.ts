@@ -80,6 +80,16 @@ export async function deletePath(path: string): Promise<unknown> {
 }
 
 export function websocketUrl(): string {
+  // Explicitly target the backend service domain via wss:// if hosted on Render
+  if (typeof window !== "undefined" && window.location.hostname.includes("onrender.com")) {
+    const host = window.location.hostname;
+    const backendHost = host.replace(/-frontend(-[a-z0-9]+)?\.onrender\.com$/, "-backend$1.onrender.com");
+    if (backendHost !== host) {
+      return `wss://${backendHost}/api/simulation/ws`;
+    }
+    return `wss://third-eye-backend.onrender.com/api/simulation/ws`;
+  }
+
   if (BACKEND_URL) {
     try {
       const url = new URL(BACKEND_URL);
